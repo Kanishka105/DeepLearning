@@ -1,0 +1,35 @@
+import numpy as np
+def stepFunction(x):
+    if x>=0: 
+        return 1
+    else:
+        return 0
+def display(arr,weights,bias):
+    for x in arr:
+     z = np.dot(x, weights) + bias
+     print(x, stepFunction(z))
+def train(arr, res, weights, bias, learning_rate, epochs):
+    for epoch in range(epochs):
+        for i in range(len(arr)):
+            z = np.dot(arr[i], weights) + bias
+            pred = stepFunction(z)
+            error = res[i] - pred
+            weights += learning_rate * error * arr[i]
+            bias += learning_rate * error
+    return weights, bias
+arr=np.array([[0,0],[0,1],[1,0],[1,1]])
+andRes=np.array([0,0,0,1])
+orRes=np.array([0,1,1,1])
+xorRes=np.array([0,1,1,1])
+weights=np.zeros(2)
+bias=0
+learning_rate=0.1
+[weightAND,biasAND]=train(arr,andRes,weights,bias,learning_rate,10)
+print("AND Results:")
+display(arr,weightAND,biasAND)
+[weightOR,biasOR]=train(arr,orRes,weights,bias,learning_rate,10)
+print("OR Results:")
+display(arr,weightOR,biasOR)
+[weightXOR,biasXOR]=train(arr,xorRes,weights,bias,learning_rate,10)
+print("XOR Results:")
+display(arr,weightXOR,biasXOR)
