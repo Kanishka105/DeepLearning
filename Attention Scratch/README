@@ -1,0 +1,164 @@
+# Attention
+# 1. Tokenization and Embedding
+# 2. X- embedding vector we calculate QXW, KXW, VXW so XW are learnable parameters
+# 3. we [get qit,kit,vit],[qcat,kcat,vcat] for every token
+# 4. We are peocessing it: query: what info do I need to understand myself?
+# 5. Qit goes against all the Keys and generate relevance score which are not proabilities. they are just similarity scores
+    # Qit · Kit        = 0.7
+    # Qit · Kwas       = 0.4
+    # Qit · Khungry    = 5.7
+# Scaling: Because if Q and K are large-dimensional vectors, their dot products can become large. Softmax would become extremely sharp. so we didvide by sqrt(dk​) to get more manageble range.
+# Calculate Attention Weights (probability) using the Softmax[using activation function I convert them to probability]
+# Softmax converts the relevance scores into normalized attention weights.
+# Now retrieve information from V
+    # Attention weights:
+
+    # cat       0.70
+    # milk      0.05
+    # hungry    0.20
+    # others    0.05
+# Output=0.70Vcat​+0.05Vmilk​+0.20Vhungry​+... [High Attention -- large multipler -- more value --more Value information included] [Low attention--small multiplier--little Value information included]
+# The token with a high attention weight contributes more of its Value vector to the final output.
+#                     ATTENTION FROM SCRATCH
+#                             │
+#         ┌───────────────────┼───────────────────┐
+#         │                   │                   │
+#    1. INPUT            2. Q K V             3. SCORES
+#         │                   │                   │
+#    Tokenization        Query (Q)          Q × Kᵀ
+#         │               Key (K)                │
+#    Embeddings           Value (V)         Scaling
+#         │                   │             / √dₖ
+#         │                   │                   │
+#         └───────────────────┼───────────────────┘
+#                             │
+#                        4. SOFTMAX
+#                             │
+#                     Attention Weights
+#                             │
+#                             ▼
+#                      5. WEIGHTED SUM
+#                             │
+#                        Weights × V
+#                             │
+#                             ▼
+#                     6. ATTENTION OUTPUT
+#                             │
+#                             ▼
+#                  7. VISUALIZATION
+#                             │
+#               ┌─────────────┼─────────────┐
+#               │             │             │
+#           Q/K/V Matrix   Score Matrix   Heatmap
+#               │             │             │
+#               └─────────────┼─────────────┘
+#                             ▼
+#                      8. EXPERIMENTS
+#                             │
+#              ┌──────────────┼──────────────┐
+#              │              │              │
+#          Change Q/K      Change scale    Masking
+#              │              │              │
+#              ▼              ▼              ▼
+#        Different        Different       Causal
+#        attention        sharpness       attention
+                #  ┌─────────────────────┐
+                #  │      Input Text     │
+                #  │ "I love this movie" │
+                #  └──────────┬──────────┘
+                #             │
+                #             ▼
+                #  ┌─────────────────────┐
+                #  │     Tokenization    │
+                #  └──────────┬──────────┘
+                #             │
+                #             ▼
+                #  ┌─────────────────────┐
+                #  │      Embeddings     │
+                #  │    X ∈ Rⁿˣᵈ         │
+                #  └──────────┬──────────┘
+                #             │
+                #   ┌─────────┼─────────┐
+                #   │         │         │
+                #   ▼         ▼         ▼
+                #  ┌───┐     ┌───┐     ┌───┐
+                #  │ Q │     │ K │     │ V │
+                #  └─┬─┘     └─┬─┘     └─┬─┘
+                #    │         │         │
+                #    └────┬────┘         │
+                #         ▼              │
+                # ┌────────────────┐     │
+                # │   Q × Kᵀ       │     │
+                # │ Attention Score │     │
+                # └───────┬────────┘     │
+                #         │              │
+                #         ▼              │
+                # ┌────────────────┐     │
+                # │   Scale        │     │
+                # │   / √dₖ        │     │
+                # └───────┬────────┘     │
+                #         │              │
+                #         ▼              │
+                # ┌────────────────┐     │
+                # │    Softmax     │     │
+                # └───────┬────────┘     │
+                #         │              │
+                #         ▼              ▼
+                # ┌────────────────────────┐
+                # │ Attention Weights × V  │
+                # └───────────┬────────────┘
+                #             │
+                #             ▼
+                #  ┌─────────────────────┐
+                #  │ Attention Output    │
+                #  └─────────────────────┘
+# RoadMap
+#                     ATTENTION FROM SCRATCH
+#                              │
+#                              ▼
+#                  PHASE 1 — Tiny Input
+#                              │
+#                              ▼
+#                  PHASE 2 — Tokenization
+#                              │
+#                              ▼
+#                  PHASE 3 — Embeddings
+#                              │
+#                              ▼
+#                  PHASE 4 — Q, K, V
+#                              │
+#                              ▼
+#                  PHASE 5 — Attention Scores
+#                              │
+#                              ▼
+#                  PHASE 6 — Scaling
+#                              │
+#                              ▼
+#                  PHASE 7 — Softmax
+#                              │
+#                              ▼
+#                  PHASE 8 — Weighted Values
+#                              │
+#                              ▼
+#                  PHASE 9 — Complete
+#                     Self-Attention
+#                              │
+#                              ▼
+#                  PHASE 10 — Visualization
+#                              │
+#                              ▼
+#                  PHASE 11 — Causal Mask
+#                              │
+#                              ▼
+#                  PHASE 12 — Real Dataset
+#                              │
+#                              ▼
+#                  PHASE 13 — PyTorch Version
+#                              │
+#                              ▼
+#                  PHASE 14 — Multi-Head
+#                              │
+#                              ▼
+#                  TRANSFORMER FROM SCRATCH
+
+
